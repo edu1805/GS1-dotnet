@@ -1,0 +1,6 @@
+@SOS_natureza_HostAddress = http://localhost:5134
+
+GET {{SOS_natureza_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
