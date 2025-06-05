@@ -45,6 +45,16 @@ namespace SOS_Natureza
             builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             builder.Services.AddScoped<IDenunciaRepository, DenunciaRepository>();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             var app = builder.Build();
 
             // Middleware para desenvolvimento
@@ -54,6 +64,7 @@ namespace SOS_Natureza
                 app.UseSwaggerUI();
             }
 
+            app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
