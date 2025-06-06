@@ -33,9 +33,15 @@ namespace SOS_Natureza
                 swagger.EnableAnnotations();
             });
 
-            // Banco de dados Oracle
+            // Banco de dados Oracle via variável de ambiente
+            var oracleConnStr = Environment.GetEnvironmentVariable("ORACLE_CONNECTION_STRING");
+            if (string.IsNullOrEmpty(oracleConnStr))
+            {
+                throw new InvalidOperationException("A variável de ambiente 'ORACLE_CONNECTION_STRING' não foi encontrada.");
+            }
+
             builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseOracle(builder.Configuration.GetConnectionString("Oracle"))
+                options.UseOracle(oracleConnStr)
             );
 
             // AutoMapper
@@ -45,6 +51,7 @@ namespace SOS_Natureza
             builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             builder.Services.AddScoped<IDenunciaRepository, DenunciaRepository>();
 
+            // CORS
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", policy =>
